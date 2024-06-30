@@ -1,4 +1,5 @@
 import { getString, getFunction } from './index.js';
+import { win } from './win/index.js';
 
 const state = { running: false }
 
@@ -10,11 +11,7 @@ export function getRandom() {
   return Math.random();
 }
 
-export function init() {
-  state.canvas = document.createElement('canvas');
-  document.body.appendChild(state.canvas);
-  state.ctx = state.canvas.getContext('2d');
-}
+export function init() { }
 
 let lastUpdate = Date.now();
 const gameLoop = (loop, onComplete, time = 0) => {
@@ -29,15 +26,32 @@ const gameLoop = (loop, onComplete, time = 0) => {
   }
 }
 
-export function runGameLoop(gameLoopPtr, onCompletePtr) {
+export function runGameLoop(gameLoopPtr, onQuitPtr) {
   state.running = true;
-  gameLoop(getFunction(gameLoopPtr), getFunction(onCompletePtr));
+  state.onQuit = getFunction(onQuitPtr);
+  gameLoop(getFunction(gameLoopPtr));
+
 }
 
 export function createWindow(ptr, width, height) {
   document.title = getString(ptr);
+  state.canvas = document.createElement('canvas');
   state.canvas.width = width;
   state.canvas.height = height;
+  state.ctx = state.canvas.getContext('2d');
+  state.win = win.createWindow(getString(ptr), width, height);
+  state.win.element.appendChild(state.canvas);
+  state.win.onClose = () => {
+    state.running = false;
+    state.onQuit();
+  };
+  state.win.onMinimize = () => {
+    console.log('minimize');
+  };
+  state.win.onResize = (width, height) => {
+    state.canvas.width = width;
+    state.canvas.height = height;
+  };
 }
 
 export function setDrawColor(r, g, b, a) {
