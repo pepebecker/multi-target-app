@@ -14,16 +14,13 @@ export function getRandom() {
 export function init() { }
 
 let lastUpdate = Date.now();
-const gameLoop = (loop, onComplete, time = 0) => {
-  if (state.running) {
-    requestAnimationFrame(() => gameLoop(loop, onComplete, time));
-    let now = Date.now();
-    let dt = now - lastUpdate;
-    lastUpdate = now;
-    loop(dt);
-  } else {
-    onComplete();
-  }
+const gameLoop = (loop, time = 0) => {
+  if (!state.running) return;
+  requestAnimationFrame(() => gameLoop(loop, time));
+  let now = Date.now();
+  let dt = now - lastUpdate;
+  lastUpdate = now;
+  loop(dt);
 }
 
 export function runGameLoop(gameLoopPtr, onQuitPtr) {
@@ -84,15 +81,8 @@ export function fillCircle(x, y, radius) {
 }
 
 export function destroyWindow() {
-  state.canvas.remove();
+  state.win.destroy();
 }
-
-export function quit() {
-  console.log('quit');
-  state.running = false;
-}
-
-window.quit = quit;
 
 export function setOnClick(onClickPtr) {
   state.canvas.addEventListener('click', e => {
