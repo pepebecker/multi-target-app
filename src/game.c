@@ -93,9 +93,8 @@ void onClick(int x, int y) {
   });
 }
 
-void onComplete() {
+void onQuit() {
   destroyWindow();
-  quit();
 }
 
 void start() {
@@ -105,5 +104,5 @@ void start() {
   onClick(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
   onClick(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
   onClick(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-  runGameLoop(gameLoop, onComplete);
+  runGameLoop(gameLoop, onQuit);
 }

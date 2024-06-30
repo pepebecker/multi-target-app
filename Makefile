@@ -1,16 +1,26 @@
+NAME = game
+SRC = ./src/*.c -I./include
+SDL = ./sdl/*.c -lSDL2 -lSDL2_gfx
+BIN = ./bin/$(NAME)
+WASM = ./web/$(NAME).wasm
 WASM_FLAGS = --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all
 
-run: native
-	./bin/game
+run: sdl
+	$(BIN)
 
-native: clean
+sdl: clean_sdl
 	mkdir -p bin
-	clang -o bin/game native/*.c src/*.c -I./include -lSDL2 -lSDL2_gfx
+	clang $(SRC) -o $(BIN) $(SDL)
 
-wasm: clean
+wasm: clean_wasm
 	mkdir -p web
-	clang $(WASM_FLAGS) -o web/game.wasm src/*.c -I./include
+	clang $(SRC) -o $(WASM) $(WASM_FLAGS)
 
-clean:
-	rm -rf bin
-	rm -rf web/game.wasm
+clean: clean_sdl clean_wasm
+
+clean_sdl:
+	rm -rf $(BIN)
+
+clean_wasm:
+	rm -rf $(WASM)
+

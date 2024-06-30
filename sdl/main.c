@@ -35,14 +35,14 @@ void createWindow(const char* title, int32_t width, int32_t height) {
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
-void runGameLoop(void (*gameLoop)(float), void (*onComplete)()) {
+void runGameLoop(void (*gameLoop)(float), void (*onQuit)()) {
   Uint64 NOW = SDL_GetPerformanceCounter();
   Uint64 LAST = 0;
   SDL_Event event;
   while (1) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
-        onComplete();
+        onQuit();
         return;
       }
       if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -57,9 +57,7 @@ void runGameLoop(void (*gameLoop)(float), void (*onComplete)()) {
 
     gameLoop(deltaTime);
     SDL_RenderPresent(renderer);
-    SDL_Delay(1000 / 60);
   }
-  onComplete();
 }
 
 void setDrawColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -94,11 +92,6 @@ void fillCircle(int32_t x, int32_t y, int32_t r) {
 void destroyWindow() {
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
-}
-
-void quit() {
-  SDL_Quit();
-  exit(0);
 }
 
 void setOnClick(void (*onClick)(int x, int y)) {
