@@ -1,7 +1,6 @@
 @import url('win/style.css');
 
 body {
-  background-color: #666;
   margin: 0;
   padding: 0;
   width: 100vw;
@@ -10,9 +9,3 @@ body {
   justify-content: center;
   align-items: center;
 }
-
-canvas {
-  flex-grow: 1;
-  background-color: black;
-}
-
